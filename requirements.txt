@@ -1,6 +1,0 @@
-aiogram==2.25.1
-supabase
-python-dotenv
-fastapi
-uvicorn
-pydantic==1.10.13
