@@ -9,9 +9,11 @@ def register_user(tg_id, username):
         # Проверяем, есть ли уже
         user = supabase.table("users").select("*").eq("telegram_id", tg_id).execute()
         if user.data:
+            print(f"✅ Пользователь {tg_id} уже существует")
             return True
+        
         # Вставляем нового
-        supabase.table("users").insert({
+        result = supabase.table("users").insert({
             "telegram_id": tg_id,
             "username": username,
             "balance": 0,
@@ -19,8 +21,10 @@ def register_user(tg_id, username):
             "total_win": 0,
             "created_at": datetime.now().isoformat()
         }).execute()
-        print(f"✅ Пользователь {tg_id} зарегистрирован")
+        
+        print(f"✅ Пользователь {tg_id} зарегистрирован. Ответ: {result}")
         return True
+        
     except Exception as e:
         print(f"❌ Ошибка регистрации {tg_id}: {e}")
         return False
@@ -29,12 +33,14 @@ def get_user(tg_id):
     try:
         user = supabase.table("users").select("*").eq("telegram_id", tg_id).execute()
         return user.data[0] if user.data else None
-    except:
+    except Exception as e:
+        print(f"❌ Ошибка получения пользователя {tg_id}: {e}")
         return None
 
 def update_balance(tg_id, new_balance):
     try:
         supabase.table("users").update({"balance": new_balance}).eq("telegram_id", tg_id).execute()
         return True
-    except:
+    except Exception as e:
+        print(f"❌ Ошибка обновления баланса {tg_id}: {e}")
         return False
