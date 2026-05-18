@@ -6,7 +6,7 @@ from config import MIN_BET, REK
 
 app = FastAPI()
 
-# Разрешаем запросы отовсюду (для Mini App)
+# Разрешаем всё для WebApp
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -14,6 +14,11 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Простой маршрут для проверки, что сервер жив
+@app.get("/")
+def root():
+    return {"status": "CryptoLuck API is running"}
 
 @app.post("/api/play")
 async def play(request: Request):
