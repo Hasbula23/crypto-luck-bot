@@ -14,7 +14,7 @@ from admin_handlers import register_admin_handlers
 register_user_handlers(dp)
 register_admin_handlers(dp)
 
-def run_api():
+def run_fastapi():
     uvicorn.run(app, host="0.0.0.0", port=8000)
 
 async def main():
@@ -41,5 +41,6 @@ async def main():
             await asyncio.sleep(5)
         else:
             break
+
 if __name__ == "__main__":
     asyncio.run(main())
