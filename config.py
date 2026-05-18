@@ -1,8 +1,3 @@
-import os
-from dotenv import load_dotenv
-
-load_dotenv()
-
 BOT_TOKEN = "8245350158:AAHZFxA2WGXByN3Z8YJ9zwnGfy5vDBGC61Y"
 SUPABASE_URL = "https://nzbebjfzdqntydmzcxaf.supabase.co"
 SUPABASE_KEY = "sb_publishable_CFfsi2y7uhPwoIb21D19Vg_Ce3bfmFG"
