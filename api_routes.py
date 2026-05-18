@@ -1,9 +1,19 @@
 from fastapi import FastAPI, Request
+from fastapi.middleware.cors import CORSMiddleware
 from database import get_user, update_balance
 from game_logic import play_coinflip
 from config import MIN_BET, REK
 
 app = FastAPI()
+
+# Разрешаем запросы отовсюду (для Mini App)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.post("/api/play")
 async def play(request: Request):
@@ -31,7 +41,7 @@ async def play(request: Request):
         "result": result['result'],
         "win": result['win'],
         "new_balance": new_balance,
-        "message": f"{'✅ ПОБЕДА!' if result['win'] else '❌ ПРОИГРЫШ!'} +{result['amount']} Stars" if result['win'] else f"{'❌ ПРОИГРЫШ!'} {-result['amount']} Stars",
+        "message": f"{'✅ ПОБЕДА!' if result['win'] else '❌ ПРОИГРЫШ!'} {result['amount']} Stars",
         "mode": "bot"
     }
 
