@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-BOT_TOKEN = "7681724637:AAGqu_yhj_6DCMpIwgySdctogVF0dLHzweI"
+BOT_TOKEN = "8840502487:AAFPRgQgsxEC14CObDFJMSomMAAnRdEfLlg"
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 ADMIN_ID = 7955348018
