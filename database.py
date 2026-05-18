@@ -6,20 +6,23 @@ supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 def register_user(tg_id, username):
     try:
+        # Проверяем, есть ли уже
         user = supabase.table("users").select("*").eq("telegram_id", tg_id).execute()
-        if not user.data:
-            supabase.table("users").insert({
-                "telegram_id": tg_id,
-                "username": username or str(tg_id),
-                "balance": 0,
-                "total_bet": 0,
-                "total_win": 0,
-                "created_at": datetime.now().isoformat()
-            }).execute()
+        if user.data:
             return True
-        return False
+        # Вставляем нового
+        supabase.table("users").insert({
+            "telegram_id": tg_id,
+            "username": username,
+            "balance": 0,
+            "total_bet": 0,
+            "total_win": 0,
+            "created_at": datetime.now().isoformat()
+        }).execute()
+        print(f"✅ Пользователь {tg_id} зарегистрирован")
+        return True
     except Exception as e:
-        print(f"DB register error: {e}")
+        print(f"❌ Ошибка регистрации {tg_id}: {e}")
         return False
 
 def get_user(tg_id):
