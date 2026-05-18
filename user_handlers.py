@@ -13,9 +13,15 @@ def get_main_keyboard():
     ])
 
 async def start_cmd(message: types.Message):
-    register_user(message.from_user.id, message.from_user.username)
+    # Принудительная регистрация с проверкой
+    user_id = message.from_user.id
+    username = message.from_user.username or str(user_id)
+    
+    result = register_user(user_id, username)
+    print(f"Регистрация пользователя {user_id}: {'успех' if result else 'ошибка'}")
+    
     await message.reply(
-        f"🔥 Добро пожаловать в CryptoLuck!\n💰 Мин. ставка: {MIN_BET} USDT\n⚡️ Рейк: 5%\n👇 Играй:",
+        f"🔥 Добро пожаловать в CryptoLuck, {username}!\n💰 Мин. ставка: {MIN_BET} Stars\n⚡️ Рейк: 10%\n👇 Играй:",
         reply_markup=get_main_keyboard()
     )
 
@@ -23,7 +29,7 @@ async def wallet_cmd(callback: types.CallbackQuery):
     user = get_user(callback.from_user.id)
     balance = user['balance'] if user else 0
     await callback.message.answer(
-        f"💵 Баланс: {balance} USDT\n💳 Кошелек: `{CRYPTO_WALLET}`",
+        f"💵 Баланс: {balance} Stars\n💳 Кошелек для пополнения:\n`{CRYPTO_WALLET}`",
         parse_mode="MARKDOWN"
     )
     await callback.answer()
@@ -35,7 +41,7 @@ async def top_cmd(callback: types.CallbackQuery):
     tops = supabase.table("users").select("username, balance").order("balance", desc=True).limit(10).execute()
     text = "🏆 ТОП-10:\n\n"
     for i, u in enumerate(tops.data, 1):
-        text += f"{i}. {u['username']} — {u['balance']} USDT\n"
+        text += f"{i}. {u['username']} — {u['balance']} Stars\n"
     await callback.message.answer(text)
     await callback.answer()
 
