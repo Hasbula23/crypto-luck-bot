@@ -36,6 +36,7 @@ async def wallet_cmd(callback: types.CallbackQuery):
         f"💵 *Твой баланс:* {balance} Stars\n\n"
         f"💳 *Пополнить баланс:*\n"
         f"Купи Stars через @wallet и напиши админу.\n"
+        f"Или используй кнопку 'Купить Stars' в Mini App.",
         parse_mode="MARKDOWN"
     )
     await callback.answer()
