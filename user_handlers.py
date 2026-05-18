@@ -13,17 +13,19 @@ def get_main_keyboard():
     ])
 
 async def start_cmd(message: types.Message):
-    # Принудительная регистрация с проверкой
     user_id = message.from_user.id
     username = message.from_user.username or str(user_id)
     
-    result = register_user(user_id, username)
-    print(f"Регистрация пользователя {user_id}: {'успех' if result else 'ошибка'}")
+    # Принудительная регистрация с проверкой
+    success = register_user(user_id, username)
     
-    await message.reply(
-        f"🔥 Добро пожаловать в CryptoLuck, {username}!\n💰 Мин. ставка: {MIN_BET} Stars\n⚡️ Рейк: 10%\n👇 Играй:",
-        reply_markup=get_main_keyboard()
-    )
+    if success:
+        await message.reply(
+            f"🔥 Добро пожаловать в CryptoLuck, {username}!\n💰 Мин. ставка: {MIN_BET} Stars\n⚡️ Рейк: 10%\n👇 Играй:",
+            reply_markup=get_main_keyboard()
+        )
+    else:
+        await message.reply("❌ Ошибка регистрации. Попробуйте позже.")
 
 async def wallet_cmd(callback: types.CallbackQuery):
     user = get_user(callback.from_user.id)
