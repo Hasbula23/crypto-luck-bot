@@ -6,4 +6,4 @@ CRYPTO_WALLET = "TPm8A1BfsZQeB9izEE1C3ZNUCLveYx2tEU"
 MIN_BET = 100
 REK = 0.1
 CURRENCY = "⭐️ Stars"
-WEBAPP_URL = "https://effortless-brigadeiros-c21c44.netlify.app/"
+WEBAPP_URL = "https://celadon-pie-5186e2.netlify.app/"
