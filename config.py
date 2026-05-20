@@ -7,3 +7,4 @@ MIN_BET = 100
 REK = 0.1
 CURRENCY = "⭐️ Stars"
 WEBAPP_URL = "https://rococo-dieffenbachia-56ee82.netlify.app/"
+CASINO_BANK = 500  # Начальный банк казино 500 Stars
