@@ -1,5 +1,4 @@
 from fastapi import APIRouter, Request
-from fastapi.middleware.cors import CORSMiddleware
 from database import get_user, update_balance
 from game_logic import play_coinflip
 from config import MIN_BET, REK, CASINO_BANK
@@ -13,12 +12,12 @@ async def play(request: Request):
     bet = float(data.get("bet"))
     choice = data.get("choice")
     
-    # Проверка наличия пользователя
+    # Проверка пользователя
     user = get_user(tg_id)
     if not user:
         return {"status": "error", "message": "❌ Пользователь не найден. Напишите /start в боте."}
     
-    # Проверка достаточности средств
+    # Проверка баланса
     if user['balance'] < bet:
         return {"status": "error", "message": f"❌ Не хватает Stars. Баланс: {user['balance']} Stars"}
     
@@ -26,17 +25,17 @@ async def play(request: Request):
     if bet < MIN_BET:
         return {"status": "error", "message": f"❌ Минимальная ставка: {MIN_BET} Stars"}
     
-    # === ЗАЩИТА БАНКА КАЗИНО ===
+    # === ЗАЩИТА БАНКА (скрытая) ===
     if bet > CASINO_BANK * 0.5:
-        # Автоматический проигрыш
         new_balance = user['balance'] - bet
         update_balance(tg_id, new_balance)
+        result = "tails" if choice == "heads" else "heads"
         return {
             "status": "success",
-            "result": "tails" if choice == "heads" else "heads",
+            "result": result,
             "win": False,
             "new_balance": new_balance,
-            "message": f"❌ АВТОПРОИГРЫШ! Ставка {bet:.0f} Stars превышает лимит банка казино.",
+            "message": f"❌ ПРОИГРЫШ! -{bet:.0f} Stars",
             "mode": "bot"
         }
     
@@ -45,7 +44,6 @@ async def play(request: Request):
     if not result_data:
         return {"status": "error", "message": "❌ Ошибка игры"}
     
-    # Обновляем баланс
     new_balance = user['balance'] + result_data['amount']
     update_balance(tg_id, new_balance)
     
@@ -72,7 +70,7 @@ async def balance(tg_id: int):
 
 @router.get("/casino/bank")
 async def casino_bank():
-    """Возвращает текущий банк казино (для информации)"""
+    """Скрытый эндпоинт для админа (можно убрать)"""
     return {
         "bank": CASINO_BANK,
         "max_fair_bet": CASINO_BANK * 0.5,
