@@ -6,5 +6,5 @@ CRYPTO_WALLET = "TPm8A1BfsZQeB9izEE1C3ZNUCLveYx2tEU"
 MIN_BET = 100
 REK = 0.1
 CURRENCY = "⭐️ Stars"
-WEBAPP_URL = "https://rococo-dieffenbachia-56ee82.netlify.app/"
-CASINO_BANK = 500  # Начальный банк казино 500 Stars
+WEBAPP_URL = "https://rococo-dieffenbachia-56ee82.netlify.app"  # Убрал слеш в конце
+CASINO_BANK = 500
