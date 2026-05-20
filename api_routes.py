@@ -1,26 +1,15 @@
-from fastapi import FastAPI, Request
+from fastapi import APIRouter, Request
 from fastapi.middleware.cors import CORSMiddleware
 from database import get_user, update_balance
 from game_logic import play_coinflip
 from config import MIN_BET, REK
 
-app = FastAPI()
+router = APIRouter()
 
-# Разрешаем всё для WebApp
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+# Разрешаем CORS для этого роутера (потом примонтируем)
+# CORS добавим в main.py
 
-# Простой маршрут для проверки, что сервер жив
-@app.get("/")
-def root():
-    return {"status": "CryptoLuck API is running"}
-
-@app.post("/api/play")
+@router.post("/play")
 async def play(request: Request):
     data = await request.json()
     tg_id = data.get("tg_id")
@@ -50,7 +39,7 @@ async def play(request: Request):
         "mode": "bot"
     }
 
-@app.get("/api/balance")
+@router.get("/balance")
 async def balance(tg_id: int):
     user = get_user(tg_id)
     return {
