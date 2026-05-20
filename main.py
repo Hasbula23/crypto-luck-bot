@@ -1,32 +1,48 @@
 import asyncio
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from aiogram import Bot, Dispatcher
 from config import BOT_TOKEN
 import uvicorn
 
-# Прямой импорт твоего API
-from api_routes import app as api_app
+# Импортируем хендлеры
+from user_handlers import register_user_handlers
+from admin_handlers import register_admin_handlers
+from api_routes import router
 
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()
 
-# Регистрируем хендлеры
-from user_handlers import register_user_handlers
-from admin_handlers import register_admin_handlers
-
+# Регистрируем команды бота
 register_user_handlers(dp)
 register_admin_handlers(dp)
 
-# Объединяем FastAPI приложение с твоими маршрутами
+# Создаём FastAPI приложение
 app = FastAPI()
 
-# Монтируем твои маршруты из api_routes
-app.mount("/api", api_app)
+# Добавляем CORS (чтобы WebApp мог стучаться к API)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
-# Корневой маршрут для проверки
+# Подключаем маршруты из api_routes с префиксом /api
+app.include_router(router, prefix="/api")
+
+# Корневой маршрут для проверки работы API
 @app.get("/")
 def root():
     return {"status": "CryptoLuck API is running"}
+
+# Эндпоинт для вебхука Telegram
+@app.post(f"/webhook/{BOT_TOKEN}")
+async def webhook(request: Request):
+    update = Update.model_validate(await request.json(), context={"bot": bot})
+    await dp.feed_update(bot, update)
+    return {"status": "ok"}
 
 async def main():
     # Устанавливаем вебхук
