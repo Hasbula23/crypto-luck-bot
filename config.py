@@ -6,5 +6,5 @@ CRYPTO_WALLET = "TPm8A1BfsZQeB9izEE1C3ZNUCLveYx2tEU"
 MIN_BET = 100
 REK = 0.1
 CURRENCY = "⭐️ Stars"
-WEBAPP_URL = "https://relaxed-salmiakki-1a41a6.netlify.app"  # Убрал слеш в конце
+WEBAPP_URL = "https://spontaneous-kulfi-e695a4.netlify.app"  # Убрал слеш в конце
 CASINO_BANK = 500
